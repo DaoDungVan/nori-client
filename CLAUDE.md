@@ -48,17 +48,34 @@ npm run dev   # chạy trên port 5173
 ## Hướng dẫn cho AI
 - Đây là dự án học tập — giải thích từng bước, đưa skeleton để user tự viết, không viết thay
 - User đang học frontend từ đầu
+- Cách giải thích hiệu quả với user này:
+  - So sánh khái niệm mới với cái user **đã biết**
+  - Dùng **chính code user vừa viết** làm ví dụ minh họa, không dùng ví dụ trừu tượng
+  - Vẽ sơ đồ luồng (ASCII) khi giải thích thứ tự xử lý / flow
+  - Kết thúc bằng 1 câu tóm tắt ngắn gọn ("Tóm lại — 1 câu: ...")
+- Cách viết skeleton hiệu quả với user này:
+  - Giữ nguyên phần code user đã biết/đã quen (try/catch, res.status, cấu trúc hàm) — chỉ để trống (`// TODO`) đúng phần kiến thức MỚI cần học
+  - Đánh số TODO (`TODO 1`, `TODO 2`...) nếu có nhiều chỗ trống, để user dễ trả lời theo thứ tự
+  - Trước hoặc sau skeleton, đặt 1 câu hỏi gợi mở liên quan đến phần TODO quan trọng nhất — để user tự suy nghĩ trước khi viết, không chỉ chép
+  - Khi có component/hàm tương tự đã viết trước đó, chỉ rõ "giống X, chỉ khác chỗ Y" thay vì giải thích lại từ đầu
 
 ---
 
 ## Tiến độ
 
-### ⏳ Phase 2 — Authentication (CHƯA BẮT ĐẦU — đang làm backend trước)
-- [ ] Cài `react-router-dom` + `axios`
-- [ ] Trang Register (/register)
+### 🔄 Phase 2 — Authentication (ĐANG LÀM)
+Backend (nori-server) đã xong hoàn toàn — xem nori-server/CLAUDE.md.
+
+- [x] Cài `react-router-dom` + `axios` (đã có trong package.json)
+- [ ] ĐANG LÀM TIẾP — Tạo trang Register (/register)
 - [ ] Trang Login (/login)
 - [ ] Lưu token vào localStorage
 - [ ] Protected Route (chặn trang nếu chưa đăng nhập)
+
+API backend đã sẵn sàng để gọi:
+- POST http://localhost:5000/api/auth/register — body { name, email, password }
+- POST http://localhost:5000/api/auth/login — body { email, password }
+- GET http://localhost:5000/api/auth/me — header Authorization: Bearer <token>
 
 ### ⏳ Phase 3 — Tâm trạng
 - [ ] Trang ghi tâm trạng, lịch sử cảm xúc
