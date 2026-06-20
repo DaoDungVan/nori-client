@@ -45,6 +45,11 @@ AI không phải tính năng chính/trung tâm, mà là lớp hỗ trợ chạy 
 npm run dev   # chạy trên port 5173
 ```
 
+## Quyết định ngôn ngữ
+- **UI/giao diện**: tiếng Anh (project dùng cho CV/portfolio, cần nhìn chuyên nghiệp)
+- **Hội thoại với AI**: tiếng Việt (hoặc ngôn ngữ user chọn) — AI luôn trả lời theo ngôn ngữ user dùng
+- Code, biến, comment: tiếng Việt vẫn giữ như cũ (không bắt buộc đổi)
+
 ## Hướng dẫn cho AI
 - Đây là dự án học tập — giải thích từng bước, đưa skeleton để user tự viết, không viết thay
 - User đang học frontend từ đầu
@@ -54,10 +59,13 @@ npm run dev   # chạy trên port 5173
   - Vẽ sơ đồ luồng (ASCII) khi giải thích thứ tự xử lý / flow
   - Kết thúc bằng 1 câu tóm tắt ngắn gọn ("Tóm lại — 1 câu: ...")
 - Cách viết skeleton hiệu quả với user này:
-  - Giữ nguyên phần code user đã biết/đã quen (try/catch, res.status, cấu trúc hàm) — chỉ để trống (`// TODO`) đúng phần kiến thức MỚI cần học
-  - Đánh số TODO (`TODO 1`, `TODO 2`...) nếu có nhiều chỗ trống, để user dễ trả lời theo thứ tự
-  - Trước hoặc sau skeleton, đặt 1 câu hỏi gợi mở liên quan đến phần TODO quan trọng nhất — để user tự suy nghĩ trước khi viết, không chỉ chép
   - Khi có component/hàm tương tự đã viết trước đó, chỉ rõ "giống X, chỉ khác chỗ Y" thay vì giải thích lại từ đầu
+- **CẬP NHẬT QUAN TRỌNG (bài học từ thực tế)**: User cần đẩy nhanh tiến độ vì sắp làm CV/portfolio, nhưng từng bị đẩy quá nhanh tới mức **code chạy đúng mà user KHÔNG THỰC SỰ HIỂU** (phát hiện ở Phase 2, phải dừng lại ôn lại Login.jsx từng dòng — xem `docs/login-explained.md`).
+  - **Tốc độ phải khớp với mức hiểu thực sự, không phải khớp với việc code chạy được.** Code chạy đúng KHÔNG đồng nghĩa user đã hiểu.
+  - Định kỳ hỏi xác nhận hiểu (không chỉ hỏi "chạy được chưa") trước khi chuyển sang phần mới, đặc biệt sau khi giới thiệu khái niệm mới (hook, state, async...)
+  - Vẫn đưa **skeleton + `// TODO`** để user tự điền — KHÔNG viết code đầy đủ thay user (đã bị từ chối 1 lần ở Phase 3/Mood)
+  - Kèm **sơ đồ architecture/luồng dữ liệu** (ASCII) để tăng tốc hiểu, và khi có pattern lặp lại thì nói "giống X, chỉ khác Y"
+  - Nếu user nói "chưa hiểu" → dừng hẳn việc thêm code mới, quay lại giải thích từng dòng của code đã có trước
 
 ---
 
@@ -66,11 +74,25 @@ npm run dev   # chạy trên port 5173
 ### 🔄 Phase 2 — Authentication (ĐANG LÀM)
 Backend (nori-server) đã xong hoàn toàn — xem nori-server/CLAUDE.md.
 
-- [x] Cài `react-router-dom` + `axios` (đã có trong package.json)
-- [ ] ĐANG LÀM TIẾP — Tạo trang Register (/register)
-- [ ] Trang Login (/login)
-- [ ] Lưu token vào localStorage
-- [ ] Protected Route (chặn trang nếu chưa đăng nhập)
+- [x] Cài `react-router-dom` + `axios`
+- [x] `src/services/api.js` — axios instance, interceptor tự gắn token
+- [x] `src/pages/Register.jsx`, `src/pages/Login.jsx`, `src/pages/Home.jsx`
+- [x] `src/components/ProtectedRoute.jsx`
+- [x] `src/App.jsx` — Routes: /login, /register, / (protected)
+- [x] `src/main.jsx` — bọc `BrowserRouter`
+- [x] `src/routes/AppRoutes.jsx` — tách Routes ra khỏi App.jsx
+- [x] UI dịch sang tiếng Anh (quyết định: UI English, hội thoại AI theo ngôn ngữ user)
+- [x] Favicon: `public/nori-logo.png` (logo lá xanh teal viền đậm, do AI generate)
+- [x] Test full flow: Register → Home → Logout → Login — TẤT CẢ OK
+
+### ✅ Phase 2 — HOÀN THÀNH TOÀN BỘ (backend + frontend, đã chạy được)
+- ⚠️ User báo CHƯA HIỂU SÂU code Login/Register dù đã test chạy đúng → đã dừng lại ôn từng dòng
+- Bài ôn chi tiết Login.jsx (useState, handleChange, handleSubmit, controlled input...) đã lưu tại `docs/login-explained.md` — đọc lại file đó để ôn nhanh
+- Register.jsx hoạt động tương tự Login.jsx (chỉ khác endpoint + có thêm field `name`)
+- BÀI HỌC: tốc độ làm việc phải khớp với việc user thực sự hiểu, không chỉ code chạy được — xem mục "Hướng dẫn cho AI" bên dưới đã cập nhật
+
+### ⏸️ Phase 3 — Tâm trạng: TẠM DỪNG
+Đã từng viết thử moodController.js/moodRoutes.js đầy đủ nhưng user yêu cầu xóa để tự viết theo skeleton (giống cách học Auth). Sẽ làm lại sau khi user xác nhận đã hiểu rõ Login/Register.
 
 API backend đã sẵn sàng để gọi:
 - POST http://localhost:5000/api/auth/register — body { name, email, password }
